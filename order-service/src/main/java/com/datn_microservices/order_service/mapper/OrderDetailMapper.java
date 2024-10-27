@@ -7,16 +7,19 @@ import com.datn_microservices.order_service.entities.Order_Detail;
 
 public class OrderDetailMapper {
     public static OrderDetailDto map_to_dto(Order_Detail order_detail, OrderDetailDto orderDetailDto) {
-        orderDetailDto.setOrder_dto();
-        orderDetailDto.setQuantity(order_detail.getOrder_date());
-        orderDetailDto.setProd_id(order_detail.getItems());
-        return order_dto;
+        orderDetailDto.setOrder_id(order_detail.getOrder().getOrder_id());
+        orderDetailDto.setQuantity(order_detail.getQuantity());
+        orderDetailDto.setProd_id(order_detail.getProd_id());
+        return orderDetailDto;
     }
 
-    public static Order map_to_entity(OrderDto orderDto, Order order) {
-        order.setOrder_id(orderDto.getOrder_id());
-        order.setOrder_date(orderDto.getOrder_date());
-        order.setItems(orderDto.getItems());
-        return order;
+    public static Order_Detail map_to_entity(OrderDetailDto orderDetailDto, Order_Detail order_detail) {
+        Order order = new Order();
+        order.setOrder_id(orderDetailDto.getOrder_id());
+
+        order_detail.setOrder(order);
+        order_detail.setQuantity(orderDetailDto.getQuantity());
+        order_detail.setProd_id(orderDetailDto.getProd_id());
+        return order_detail;
     }
 }

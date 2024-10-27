@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS "order_detail";
 DROP TABLE IF EXISTS "order";
 
 DROP SEQUENCE IF EXISTS orders_id_seq;
