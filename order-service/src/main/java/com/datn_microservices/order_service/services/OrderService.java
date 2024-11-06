@@ -4,17 +4,17 @@ import com.datn_microservices.order_service.dto.OrderDto;
 import com.datn_microservices.order_service.dto.ProductDetailResponseDto;
 import com.datn_microservices.order_service.dto.ProductDto;
 import com.datn_microservices.order_service.entities.Order;
-import com.datn_microservices.order_service.entities.Order_Detail;
 import com.datn_microservices.order_service.exception.NotEnoughResourceException;
 import com.datn_microservices.order_service.mapper.OrderMapper;
 import com.datn_microservices.order_service.repositories.OrderRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -23,9 +23,10 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final HttpRequestService httpRequestService;
     private final ProductService productService;
+    private final KafkaTemplate kafkaTemplate;
 
-    public void createOrder(OrderDto orderDto) {
-        Map<Long, ProductDto> productDtoList = new HashMap<Long, ProductDto>();
+    public void createOrder(OrderDto  orderDto) {
+        Map<Long, ProductDto> productDtoList = new HashMap<>();
         // Validate the ordered quantity
         orderDto.getItems().forEach(it -> {
             Long prod_id = it.getProd_id();
@@ -39,11 +40,9 @@ public class OrderService {
             }
         });
 
-        // Handle the order
 
-        Order order = OrderMapper.map_to_entity(orderDto, new Order());
+        Order order = OrderMapper.toOrderEntity(orderDto);
         order.setOrder_date(LocalDate.now());
-        System.out.println(order);
         Order saved_order = orderRepository.saveAndFlush(order);
 
         // Update the inventory
@@ -53,6 +52,8 @@ public class OrderService {
             productDto.setId(prod_id);
             productDto.setStock_quantity(productDtoList.get(prod_id).getStock_quantity() - it.getQuantity());
             httpRequestService.sendPutRequest(String.format("http://127.0.0.1:3000/api/products/%d", prod_id), productDto);
+
+            kafkaTemplate.send("order", it);
         });
     }
 }

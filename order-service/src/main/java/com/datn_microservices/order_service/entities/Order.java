@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Setter @Getter @ToString
-@AllArgsConstructor @NoArgsConstructor
+@Data
 @Table(name = "\"order\"")
 public class Order {
 
@@ -23,6 +22,6 @@ public class Order {
     private LocalDate order_date;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY,
-                cascade = CascadeType.ALL, targetEntity = Order_Detail.class)
+                cascade = CascadeType.ALL)
     private List<Order_Detail> items = new ArrayList<>();
 }

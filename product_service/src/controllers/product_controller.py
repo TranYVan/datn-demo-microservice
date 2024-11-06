@@ -1,6 +1,7 @@
 from flask import request, Response, json, Blueprint
 from src.models.product_model import Product
 from src import db
+import time
 
 products = Blueprint('products', __name__)
 
@@ -38,9 +39,9 @@ def fetch(prod_id):
 
 @products.route('/<prod_id>', methods = ["PUT"])
 def update(prod_id):
+    time.sleep(5)
     payload = request.get_json()
     product = Product.query.filter_by(id=prod_id).update(payload)
-    print(product)
     db.session.commit()
 
     return Response(

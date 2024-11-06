@@ -6,24 +6,16 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Setter
-@Getter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Table(name = "order_detail")
-@IdClass(OrderDetailPk.class)
 public class Order_Detail {
 
-    @Column(name = "order_id")
-    private Long order_id;
+    @EmbeddedId
+    private OrderDetailPK id;
 
-    @Id
-    @Column(name = "prod_id")
-    private Long prod_id;
-
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "order_id", referencedColumnName = "order_id", nullable = false, insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @MapsId("order_id")
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @Column(name = "quantity")
