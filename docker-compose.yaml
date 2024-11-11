@@ -29,3 +29,39 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+  orderdb:
+    container_name: orderdb
+    ports:
+      - 3307:3306
+    extends:
+      file: common-config.yaml
+      service: microservice-db-config
+  order_service:
+    image: 'yfangvjoker/order-service:s1'
+    container_name: order_service
+    ports:
+      - "9000:9000"
+    depends_on:
+      orderdb:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9000/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      SPRING_APPLICATION_NAME: "order"
+    extends:
+      file: common-config.yaml
+      service: microservice-detail-config
+  product_service:
+    image: 'yfangvjoker/product-service:v1'
+    container_name: product_service
+    ports:
+      - "8080:8080"
+    environment:
+      FLASK_APP: app.py
+    extends:
+      file: common-config.yaml
+      service: microservice-detail-config
