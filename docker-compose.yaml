@@ -33,6 +33,10 @@ services:
     container_name: orderdb
     ports:
       - 3307:3306
+    environment:
+      MYSQL_DATABASE: orderdb
+      MYSQL_USER: orderdb
+      MYSQL_PASSWORD: orderdb
     extends:
       file: common-config.yaml
       service: microservice-db-config
@@ -52,6 +56,7 @@ services:
       start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "order"
+      SPRING_DATASOURCE_URL: "jdbc:mysql//orderdb:3307/orderdb"
     extends:
       file: common-config.yaml
       service: microservice-detail-config
