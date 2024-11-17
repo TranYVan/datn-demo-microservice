@@ -56,7 +56,7 @@ services:
       start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "order"
-      SPRING_DATASOURCE_URL: "jdbc:mysql//orderdb:3307/orderdb"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://orderdb:3306/orderdb"
     extends:
       file: common-config.yaml
       service: microservice-detail-config
