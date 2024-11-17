@@ -55,13 +55,19 @@ services:
     extends:
       file: common-config.yaml
       service: microservice-detail-config
-  product_service:
-    image: 'yfangvjoker/product-service:v1'
-    container_name: product_service
-    ports:
-      - "8080:8080"
-    environment:
-      FLASK_APP: app.py
-    extends:
-      file: common-config.yaml
-      service: microservice-detail-config
+  
+  # productdb:
+  #   image: 'postgres:12.21'
+  #   shm_size: 128mb
+  #   environment:
+  #     POSTGRES_PASSWORD: postgres
+  # product_service:
+  #   image: 'yfangvjoker/product-service:v1'
+  #   container_name: product_service
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     FLASK_APP: app.py
+  #   extends:
+  #     file: common-config.yaml
+  #     service: microservice-detail-config
