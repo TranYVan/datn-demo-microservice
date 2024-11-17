@@ -1,16 +1,20 @@
-FROM python:3.8
+# Use the official Python image from the Docker Hub
+FROM python:3.10.12-slim-bullseye
+
+# Set the working directory
 WORKDIR /app
 
+# Copy the requirements file into the image
+COPY requirements.txt .
+
+# Install the dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
 COPY . .
 
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
+# Expose the port the app runs on
+EXPOSE 5000
 
-RUN chmod +x init_setup.sh
-RUN ./init_setup.sh
-
-EXPOSE 8080
-# CMD ["flask", "run", "--host", "0.0.0.0", "--port", "8080"]
-
-ENTRYPOINT [ "python3" ]
-CMD ["app.py"]
+# Define the command to run the application
+CMD ["python", "app.py", "runserver", "--host", "0.0.0.0"]

@@ -25,10 +25,12 @@ def fetch_all():
 def fetch(prod_id):
 
     product = Product.query.filter_by(id=prod_id).first()
+
     product_obj = {
         "id": product.id,
         "prod_name": product.prod_name,
-        "stock_quantity": product.stock_quantity
+        "stock_quantity": product.stock_quantity,
+        "prod_type": product.prod_type.type_name
     } 
 
     return Response(
@@ -39,7 +41,7 @@ def fetch(prod_id):
 
 @products.route('/<prod_id>', methods = ["PUT"])
 def update(prod_id):
-    time.sleep(5)
+    # time.sleep(5)
     payload = request.get_json()
     product = Product.query.filter_by(id=prod_id).update(payload)
     db.session.commit()
@@ -49,3 +51,9 @@ def update(prod_id):
         status=200,
         mimetype='application/json'
     )
+
+@products.route('/', methods=["POST"])
+def create():
+    payload = request.get_json()
+    # product_obj = Product
+    db.session.add()

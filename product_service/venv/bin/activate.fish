@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/vanty/Working/microservices/datn-demo-microservices/product_service/venv"
+set -gx VIRTUAL_ENV "/home/vanty/working/code/thesis2024/datn-demo-microservice/product_service/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

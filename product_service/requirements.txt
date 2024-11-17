@@ -1,8 +1,8 @@
-flask
 pathlib
-python-dotenv
-PyJWT
-Flask-SQLAlchemy
+Flask
 Flask-Migrate
+Flask-SQLAlchemy
 flask-bcrypt
-mysqlclient
+python-dotenv
+psycopg2-binary
+PyJWT

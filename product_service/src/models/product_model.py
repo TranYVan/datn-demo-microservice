@@ -8,4 +8,7 @@ class Product(db.Model):
     prod_name = db.Column(db.String(255), unique=True)
     stock_quantity = db.Column(db.Integer(), nullable=False)
     prod_type_id = db.Column(db.Integer(), db.ForeignKey("prod_type.id"))
-    prod_type = db.relationship("Product_type", back_populates="products")
+    prod_type = db.relationship("Product_type", back_populates="products", lazy=True)
+
+    def __repr__(self) -> str:
+        return f"Product('{self.id}', '{self.prod_name}', '{self.stock_quantity}', '{self.prod_type.type_name}')"
