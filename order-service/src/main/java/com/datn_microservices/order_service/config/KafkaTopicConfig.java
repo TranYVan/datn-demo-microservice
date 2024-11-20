@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
-public class KafkaConfig {
-
+public class KafkaTopicConfig {
+    
     @Bean
     public NewTopic orderTopic() {
         return TopicBuilder.name("order")
