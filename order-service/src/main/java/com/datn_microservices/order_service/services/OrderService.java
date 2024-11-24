@@ -51,9 +51,11 @@ public class OrderService {
             ProductDto productDto = new ProductDto();
             productDto.setId(prod_id);
             productDto.setStock_quantity(productDtoList.get(prod_id).getStock_quantity() - it.getQuantity());
-            httpRequestService.sendPutRequest(String.format("http://127.0.0.1:3000/api/products/%d", prod_id), productDto);
+            System.out.println(productDto);
+            httpRequestService.sendPutRequest(String.format("http://product_service:3000/api/products/%d", prod_id), productDto);
+            // httpRequestService.sendPutRequest(String.format("http://localhost:3000/api/products/%d", prod_id), productDto);
 
-            kafkaTemplate.send("order", it);
+            // kafkaTemplate.send("order", it);
         });
     }
 }

@@ -1,0 +1,31 @@
+# Ignore node_modules directory
+node_modules
+
+# Ignore build or output directories
+build
+dist
+
+# Ignore migration directories
+migration
+instance
+
+# Ignore version control folders
+.git
+.svn
+
+# Ignore Docker-specific files
+Dockerfile
+docker-compose.yml
+
+# Ignore temporary files and backups
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Ignore environment files
+.env
+.env.local
+
+# VSCode
+__pycache__

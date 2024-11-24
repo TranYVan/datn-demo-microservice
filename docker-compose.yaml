@@ -36,17 +36,18 @@ services:
       - 3307:3306
     environment:
       MYSQL_DATABASE: orderdb
-      # MYSQL_USER: orderdb
-      # MYSQL_PASSWORD: orderdb
+    volumes:
+      - orderdb-volume:/var/lib/mysql
+      - ./order-service/src/main/resources/db:/docker-entrypoint-initdb.d
     extends:
       file: common-config.yaml
-      service: microservice-db-config
+      service: microservice-mysql-config
 
   order_service:
     image: 'yfangvjoker/order-service:s1'
     container_name: order_service
     ports:
-      - "9000:9000"
+      - "8080:8080"
     depends_on:
       orderdb:
         condition: service_healthy
@@ -66,22 +67,41 @@ services:
       file: common-config.yaml
       service: microservice-detail-config
   
-  # productdb:
-  #   image: 'postgres:12.21'
-  #   shm_size: 128mb
-  #   environment:
-  #     POSTGRES_PASSWORD: postgres
-  # product_service:
-  #   image: 'yfangvjoker/product-service:v1'
-  #   container_name: product_service
-  #   ports:
-  #     - "8080:8080"
-  #   environment:
-  #     FLASK_APP: app.py
-  #   extends:
-  #     file: common-config.yaml
-  #     service: microservice-detail-config
+  productdb:
+    shm_size: 128mb
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: product_db
+    volumes:
+      - ./product_service/db:/docker-entrypoint-initdb.d
+      - productdb-volume:/var/lib/postgresql/data
+    extends:
+      file: common-config.yaml
+      service: microservice-psql-config
+
+  product_service:
+    image: 'yfangvjoker/product_service:v1.1.0'
+    container_name: product_service
+    ports:
+      - "5000:5000"
+      - "3000:3000"
+    depends_on:
+      productdb:
+        condition: service_healthy
+    environment:
+      FLASK_APP: app.py
+      SQLALCHEMY_DATABASE_URI_DEV: 'postgresql://postgres:your_password@productdb:5432/product_db'
+      SQLALCHEMY_TRACK_MODIFICATIONS: False
+    extends:
+      file: common-config.yaml
+      service: microservice-detail-config
 
 networks:
   demo-datn:
     driver: bridge
+
+volumes:
+  orderdb-volume:
+  productdb-volume:
