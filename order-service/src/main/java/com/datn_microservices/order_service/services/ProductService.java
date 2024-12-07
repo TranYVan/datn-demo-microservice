@@ -14,7 +14,8 @@ public class ProductService {
     private RestTemplate restTemplate;
 
     public ResponseEntity<ProductDetailResponseDto>  getProduct(Long id) {
-        String url = String.format("http://127.0.0.1:3000/api/products/%d", id);
+        // String url = String.format("http://127.0.0.1:3000/api/products/%d", id);
+        String url = String.format("http://product_service:3000/api/products/%d", id);
         ResponseEntity<ProductDetailResponseDto> productDetailResponseDto = restTemplate.getForEntity(url, ProductDetailResponseDto.class);
         return productDetailResponseDto;
     }

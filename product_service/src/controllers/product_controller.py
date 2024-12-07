@@ -43,7 +43,8 @@ def fetch(prod_id):
 def update(prod_id):
     # time.sleep(5)
     payload = request.get_json()
-    product = Product.query.filter_by(id=prod_id).update(payload)
+    filtered_dict = {key: value for key, value in payload.items() if value is not None}
+    Product.query.filter_by(id=prod_id).update(filtered_dict)
     db.session.commit()
 
     return Response(

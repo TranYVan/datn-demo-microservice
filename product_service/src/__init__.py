@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 # calling the dev configuration
 config = Config().dev_config
-
+print(config.PORT)
 # making our application to use dev env
 app.env = config.ENV
 
