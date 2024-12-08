@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: product_service_pod
+  labels:
+    name: product_service_pod
+    app: order
+spec:
+  containers:
+    - name: product_service
+      image: yfangvjoker/product_service:v1.1.0
+      port: 
+        - containerPort: 3000

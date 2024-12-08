@@ -1,0 +1,54 @@
+name: Build and Run Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Java environment for Maven
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Build Docker image for order_service
+      - name: Build order_service Docker image
+        working-directory: order-service
+        run: |
+          ./mvnw compile jib:dockerBuild
+
+      # Set up Python environment for Flask
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Install dependencies and build product_service Docker image
+      - name: Build product_service Docker image
+        working-directory: product_service
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          docker build -t yfangvjoker/product_service:v1.1.0 .
+
+      # Run Docker Compose to start the project
+      - name: Run Docker Compose
+        run: |
+          docker-compose up -d
+
+      # Verify Docker containers are running (Optional)
+      - name: Verify Docker containers
+        run: docker ps
